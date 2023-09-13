@@ -1,47 +1,64 @@
 import { useEffect, useState } from "react";
 import { Marker, Popup, useMapEvents } from "react-leaflet";
 
-export default function AddMarker({geolocate}) {
+var IDCounter = 1;
+
+export default function AddMarker({ geolocate }) {
     const [coord, setPosition] = useState([]);
 
+    // Create
     useMapEvents({
         click: (e) => {
-            if (geolocate === false) {setPosition([...coord, e.latlng]);}
+            if (geolocate === false) {
+                setPosition([...coord,
+                {
+                    markerID: IDCounter,
+                    markerPosition: e.latlng
+                }
+                ]);
+                IDCounter+= 1;
+            }
         }
     });
 
+    // Read
     useEffect(() => {
         console.log(coord);
     }, [coord]);
 
-    const removeMarker = (pos) => {
-        setPosition((prevCoord) =>
-            prevCoord.filter((coord) => JSON.stringify(coord) !== JSON.stringify(pos))
-        );
-    };
-
+    // Update
     const handleMarkerDragEnd = (idx, e) => {
         const latlng = e.target.getLatLng();
         const newCoord = [...coord];
-        newCoord[idx] = latlng;
+        newCoord[idx] = {
+            ...newCoord[idx],
+            markerPosition: latlng
+        }
         setPosition(newCoord);
-        console.log(coord[idx]);
-      };
+        console.log(coord[idx].markerPosition);
+    };
+
+    // Delete
+    const removeMarker = (pos) => {
+        setPosition((prevCoord) =>
+            prevCoord.filter((coord) => JSON.stringify(coord.markerPosition) !== JSON.stringify(pos))
+        );
+    };
 
     return (
         <div>
             {coord.map((pos, idx) => (
                 <Marker
                     key={`marker-${idx}`}
-                    position={pos}
+                    position={pos.markerPosition}
                     draggable={true}
                     eventHandlers={{
-                        dragend: (e) => {handleMarkerDragEnd(idx, e)}
+                        dragend: (e) => { handleMarkerDragEnd(idx, e) }
                     }}
                 >
                     <Popup>
                         <button onClick={() => setTimeout(() => {
-                            removeMarker(pos)
+                            removeMarker(pos.markerPosition)
                         }, 100)}>Remove marker</button>
                     </Popup>
                 </Marker>
