@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import { Marker, Popup, useMapEvents } from "react-leaflet";
+import Read from "../components/fetch/Read";
+import Create from "../components/fetch/Create";
+import Update from "../components/fetch/Update";
+import Delete from "../components/fetch/Delete";
 
 var IDCounter = 1;
 
@@ -10,12 +14,13 @@ export default function AddMarker({ geolocate }) {
     useMapEvents({
         click: (e) => {
             if (geolocate === false) {
-                setPosition([...coord,
-                {
-                    markerID: IDCounter,
-                    markerPosition: e.latlng
-                }
-                ]);
+                Create({param1: IDCounter, param2: e.latlng.lat.toString(), param3: e.latlng.lng.toString(), param4: setPosition});
+                // setPosition([...coord,
+                // {
+                //     markerID: IDCounter,
+                //     markerPosition: e.latlng
+                // }
+                // ]);
                 IDCounter+= 1;
             }
         }
@@ -23,8 +28,8 @@ export default function AddMarker({ geolocate }) {
 
     // Read
     useEffect(() => {
-        console.log(coord);
-    }, [coord]);
+    Read({param1: setPosition});
+    }, []);
 
     // Update
     const handleMarkerDragEnd = (idx, e) => {
@@ -34,15 +39,16 @@ export default function AddMarker({ geolocate }) {
             ...newCoord[idx],
             markerPosition: latlng
         }
-        setPosition(newCoord);
-        console.log(coord[idx].markerPosition);
+        Update({param1: newCoord[idx].markerID, param2: latlng.lat.toString(), param3: latlng.lng.toString(), param4: setPosition});
+        //setPosition(newCoord);
     };
 
     // Delete
     const removeMarker = (pos) => {
-        setPosition((prevCoord) =>
-            prevCoord.filter((coord) => JSON.stringify(coord.markerPosition) !== JSON.stringify(pos))
-        );
+        Delete({param1: pos.markerID, param2: setPosition});
+        // setPosition((prevCoord) =>
+        //     prevCoord.filter((coord) => JSON.stringify(coord.markerPosition) !== JSON.stringify(pos.markerPosition))
+        // );
     };
 
     return (
@@ -58,7 +64,7 @@ export default function AddMarker({ geolocate }) {
                 >
                     <Popup>
                         <button onClick={() => setTimeout(() => {
-                            removeMarker(pos.markerPosition)
+                            removeMarker(pos)
                         }, 100)}>Remove marker</button>
                     </Popup>
                 </Marker>

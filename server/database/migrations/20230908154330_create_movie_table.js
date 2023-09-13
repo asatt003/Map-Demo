@@ -4,11 +4,11 @@
  */
 exports.up = function(knex) {
     return knex.schema
-    .createTable("movies", function (table) {
+    .createTable("markers", function (table) {
         table.increments("id").primary();
-        table.string("title").notNullable();
-        table.boolean("addedByUser").notNullable();
-        table.boolean("watched").notNullable();
+        table.integer("marker_id").notNullable();
+        table.string("latitude").notNullable();
+        table.string("longitude").notNullable();
     })
 };
 
@@ -18,5 +18,5 @@ exports.up = function(knex) {
  */
 exports.down = function(knex) {
     return knex.schema
-    .dropTableIfExists("movies");
+    .dropTableIfExists("markers");
 };

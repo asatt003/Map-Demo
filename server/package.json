@@ -6,7 +6,7 @@
   "scripts": {
     "test": "Test",
     "start": "nodemon server.js",
-    "view": "node database/view/view_movies.js"
+    "view": "node database/view/view_markers.js"
   },
   "repository": {
     "type": "git",

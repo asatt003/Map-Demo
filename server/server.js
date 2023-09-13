@@ -10,46 +10,44 @@ const PORT = process.env.PORT || 8080;
 app.use(express.json());
 app.use(cors());
 
+// {marker_id: 0, latitude: "39.056198", longitude: "-95.695312"}
+// Read
 app.get("/", async (req, res) => {
     try {
-        let { title } = req.query;
-        let { addedByUser } = req.query;
+        const data = await knex("markers")
+            .select("*")
+        res.status(200).json(data);
 
-        if (title !== undefined) {
-            let query = knex("movies").select("*");
-            title === "*" ? query = knex("movies").select("*") : query.where('title', 'like', `%${title}%`);
-            const data = await query;
-
-            data === null ? res.send("Nope") : res.status(200).json(data);
-
-        } else if (addedByUser === "all") {
-            const data = await knex("movies")
-                .select("*")
-            res.status(200).json(data);
-
-        } else if (addedByUser !== undefined) {
-            const data = await knex("movies").where("addedByUser", addedByUser)
-            res.status(200).json(data);
-            
-        } else {
-            const data = await knex("movies")
-                .select("*")
-            res.status(200).json(data);
-        }
     } catch (err) {
         console.log(err);
         res.status(404).json({ message: "We're sorry. All our representatives are currently helping other customers. Please call again later." });
     }
 });
-
+// Create
 app.post("/", async (req, res) => {
     try {
-        await knex("movies").insert({
-            title: req.body.title,
-            addedByUser: true,
-            watched: false
+        await knex("markers").insert({
+            marker_id: req.body.marker_id,
+            latitude: req.body.latitude,
+            longitude: req.body.longitude
         });
-        const data = await knex("movies").select("*")
+        const data = await knex("markers").select("*")
+        res.status(201).json(data);
+    } catch (err) {
+        console.log(err);
+        res.status(404).json({ message: "We're sorry. All our representatives are currently helping other customers. Please call again later." });
+    }
+});
+//Update
+app.patch("/", async (req, res) => {
+    try {
+        if (req.body.marker_id !== undefined) {
+            await knex("markers").where("marker_id", req.body.marker_id).update({
+                latitude: req.body.latitude,
+                longitude: req.body.longitude
+            })
+        }
+        const data = await knex("markers").select("*")
         res.status(201).json(data);
     } catch (err) {
         console.log(err);
@@ -57,21 +55,23 @@ app.post("/", async (req, res) => {
     }
 });
 
+// Fetch: `http://localhost:8080?marker_id=${newDelete.marker_id}`
+//Delete
 app.delete("/", async (req, res) => {
     try {
-        let { title } = req.query;
+        let { marker_id } = req.query;
 
-        if (title !== undefined) {
-            await knex("movies").where("title", title).del();
-            const data = await knex("movies").select("*")
+        if (marker_id !== undefined) {
+            await knex("markers").where("marker_id", marker_id).del();
+            const data = await knex("markers").select("*")
             res.status(200).json(data);
         } else {
-            const data = await knex("movies").select("*")
+            const data = await knex("markers").select("*")
             res.status(200).json(data);
         }
     } catch (err) {
         console.log(err);
-        res.status(400).json({ message: "Bad request" });
+        res.status(400).json({ message: "We're sorry. All our representatives are currently helping other customers. Please call again later." });
     }
 });
 

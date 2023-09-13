@@ -6,10 +6,11 @@
  */
 
 const knex = require('knex')(require('../knexfile.js')[process.env.NODE_ENV || 'development']);
-const tableName = "movies";
+const tableName = "markers";
 
 knex(tableName)
 .then(data => {
+
     let ObjTableSpacing = [];
 
     for (let i = 0; i < Object.keys(data[0]).length; i++) {

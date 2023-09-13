@@ -1,14 +1,8 @@
 exports.seed = function(knex) {
     // Deletes ALL existing entries
-    return knex('movies').del()
+    return knex('markers').del()
       .then( () => {
         // Inserts seed entries
-        return knex('movies').insert([
-            {title: 'Mean Girls', addedByUser: false, watched: false},
-            {title: 'Hackers', addedByUser: false, watched: false},
-            {title: 'The Grey', addedByUser: false, watched: false},
-            {title: 'Sunshine', addedByUser: false, watched: false},
-            {title: 'Ex Machina', addedByUser: false, watched: false}
-          ]);
+        return knex('markers').insert([{marker_id: 0, latitude: "39.056198", longitude: "-95.695312"}]);
       });
   };

@@ -5,14 +5,9 @@ import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import icon from "leaflet/dist/images/marker-icon.png";
 import "leaflet/dist/leaflet.css";
 import Switch from '@mui/material/Switch';
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import logo from './logo.svg';
 import './App.css';
-// import Search from "./components/form/Search";
-// import AddMovies from "./components/form/Add";
-// import DeleteMovies from "./components/form/Delete"
-// import UserAddedToggleButton from "./components/UserAddedbutton";
-// import DisplayMap from "./components/Map";
 import AddMarker from "./components/AddMarker";
 
 let DefaultIcon = L.icon({
@@ -54,12 +49,6 @@ function App() {
   };
 
   const label = { inputProps: { 'aria-label': 'Enable Geolocation' } };
-  //useEffect(() => {
-  //   // fetch("http://localhost:8080/")
-  //   //   .then((result) => result.json())
-  //   //   .then((data) => setMovieData(data))
-  //   //   .catch(err => console.log(err))
-  // }, []);
 
   return (
     <div className="Movie App">

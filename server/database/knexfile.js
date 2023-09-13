@@ -12,7 +12,7 @@ module.exports = {
       password: "docker",
       user: "postgres",
       port: 5432,
-      database: "movies_09_08_23",
+      database: "map_09_13_23",
     },
   },
 
